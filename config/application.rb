@@ -1,6 +1,7 @@
 require_relative "boot"
 
 require "rails/all"
+# require "propshaft/railtie" # <--- ¡ELIMINA O COMENTA ESTA LÍNEA!
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -10,6 +11,14 @@ module QuoteEditor
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.0
+
+    # Configuración para Propshaft y Sass
+    config.propshaft.css_paths << Rails.root.join("app/assets/stylesheets")
+    config.propshaft.js_paths << Rails.root.join("app/assets/javascripts")
+
+    config.assets.css_compressor = :sassc
+    config.sass.load_paths << Rails.root.join('app', 'assets', 'stylesheets')
+
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
