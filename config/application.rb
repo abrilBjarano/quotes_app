@@ -1,7 +1,7 @@
 require_relative "boot"
 
 require "rails/all"
-# require "propshaft/railtie" # <--- ¡ELIMINA O COMENTA ESTA LÍNEA!
+# require "propshaft" # <--- ¡ESTA LÍNEA DEBE IR COMENTADA O ELIMINADA!
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -13,8 +13,8 @@ module QuoteEditor
     config.load_defaults 8.0
 
     # Configuración para Propshaft y Sass
-    config.propshaft.css_paths << Rails.root.join("app/assets/stylesheets")
-    config.propshaft.js_paths << Rails.root.join("app/assets/javascripts")
+    # config.propshaft.css_paths << Rails.root.join("app/assets/stylesheets") # COMENTADA
+    # config.propshaft.js_paths << Rails.root.join("app/assets/javascripts") # COMENTADA
 
     config.assets.css_compressor = :sassc
     config.sass.load_paths << Rails.root.join('app', 'assets', 'stylesheets')
