@@ -1,12 +1,17 @@
-<div class="quote">
-  <%= link_to quote.name, quote_path(quote) %>
-  <div class="quote__actions">
-    <%= button_to "Delete",
-                  quote_path(quote),
-                  method: :delete,
+<%# app/views/quotes/_quote.html.erb %>
+<%= turbo_frame_tag quote do %> <%# ✨ NUEVO: Envuelve CADA CITA en un frame con su ID único (ej., "quote_123"). %>
+  <li class="quote">
+    <%= link_to quote.name,
+                quote_path(quote),
+                data: { turbo_frame: "_top" } %> <%# ✨ MODIFICADO: El link de 'mostrar' ahora recarga TODA la página. %>
+    <div class="quote__actions">
+      <%= button_to "Delete",
+                    quote_path(quote),
+                    method: :delete,
+                    class: "btn btn--light" %>
+      <%= link_to "Edit",
+                  edit_quote_path(quote),
                   class: "btn btn--light" %>
-    <%= link_to "Edit",
-                edit_quote_path(quote),
-                class: "btn btn--light" %>
-  </div>
-</div>
+    </div>
+  </li>
+<% end %>

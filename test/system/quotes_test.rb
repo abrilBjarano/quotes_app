@@ -1,22 +1,10 @@
+# test/system/quotes_test.rb
 require "application_system_test_case"
 
 class QuotesTest < ApplicationSystemTestCase
   setup do
-    @quote = quotes(:first) # Este es uno de los datos del archivo quotes.yml
-  end
-
-  test "Creating a new quote" do
-    visit quotes_path
-    assert_selector "h1", text: "Quotes"
-
-    click_on "New quote"
-    assert_selector "h1", text: "New quote"
-
-    fill_in "Name", with: "Capybara quote"
-    click_on "Create quote"
-
-    assert_selector "h1", text: "Quotes"
-    assert_text "Capybara quote"
+    # ✨ MODIFICADO: Aseguramos que la primera cita sea la más reciente para los tests.
+    @quote = Quote.ordered.first
   end
 
   test "Showing a quote" do
@@ -26,14 +14,28 @@ class QuotesTest < ApplicationSystemTestCase
     assert_selector "h1", text: @quote.name
   end
 
+  test "Creating a new quote" do
+    visit quotes_path
+    assert_selector "h1", text: "Quotes"
+
+    click_on "New quote"
+    fill_in "Name", with: "Capybara quote"
+
+    assert_selector "h1", text: "Quotes"
+    click_on "Create quote"
+
+    assert_selector "h1", text: "Quotes"
+    assert_text "Capybara quote"
+  end
+
   test "Updating a quote" do
     visit quotes_path
     assert_selector "h1", text: "Quotes"
 
     click_on "Edit", match: :first
-    assert_selector "h1", text: "Edit quote"
-
     fill_in "Name", with: "Updated quote"
+
+    assert_selector "h1", text: "Quotes"
     click_on "Update quote"
 
     assert_selector "h1", text: "Quotes"

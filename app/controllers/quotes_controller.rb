@@ -1,50 +1,76 @@
+# app/controllers/quotes_controller.rb
 class QuotesController < ApplicationController
-  before_action :set_quote, only: [:show, :edit, :update, :destroy]
+  before_action :set_quote, only: %i[ show edit update destroy ]
 
+  # GET /quotes or /quotes.json
   def index
-    @quotes = Quote.all
+    # ✨ MODIFICADO: Usamos el scope para ordenar las citas.
+    @quotes = Quote.ordered
   end
 
+  # GET /quotes/1 or /quotes/1.json
   def show
   end
 
+  # GET /quotes/new
   def new
     @quote = Quote.new
   end
 
-  def create
-    @quote = Quote.new(quote_params)
-
-    if @quote.save
-      redirect_to quotes_path, notice: "Quote was successfully created."
-    else
-      render :new, status: :unprocessable_entity
-    end
-  end
-
+  # GET /quotes/1/edit
   def edit
   end
 
-  def update
-    if @quote.update(quote_params)
-      redirect_to quotes_path, notice: "Quote was successfully updated."
-    else
-      render :edit, status: :unprocessable_entity
+  # POST /quotes or /quotes.json
+  def create
+    @quote = Quote.new(quote_params)
+
+    respond_to do |format|
+      if @quote.save
+        format.html { redirect_to quotes_path(@quote), status: :see_other }
+        format.json { render :show, status: :created, location: @quote }
+        format.turbo_stream # ✨ NUEVO: Responde con Turbo Stream para crear en vivo.
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @quote.errors, status: :unprocessable_entity }
+        format.turbo_stream # ✨ NUEVO: Responde con Turbo Stream para errores en vivo.
+      end
     end
   end
 
+  # PATCH/PUT /quotes/1 or /quotes/1.json
+  def update
+    respond_to do |format|
+      if @quote.update(quote_params)
+        format.html { redirect_to quote_url(@quote), notice: "Quote was successfully updated." }
+        format.json { render :show, status: :ok, location: @quote }
+        # ✨ Opcional: También podrías agregar format.turbo_stream aquí si quisieras un update con stream.
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @quote.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # DELETE /quotes/1 or /quotes/1.json
   def destroy
     @quote.destroy
-    redirect_to quotes_path, notice: "Quote was successfully destroyed."
+
+    respond_to do |format|
+      format.html { redirect_to quotes_url, notice: "Quote was successfully destroyed.", status: :see_other }
+      format.json { head :no_content }
+      format.turbo_stream # ✨ NUEVO: Responde con Turbo Stream para eliminar en vivo.
+    end
   end
 
   private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_quote
+      @quote = Quote.find(params[:id])
+    end
 
-  def set_quote
-    @quote = Quote.find(params[:id])
-  end
-
-  def quote_params
-    params.require(:quote).permit(:name)
-  end
+    # Only allow a list of trusted parameters through.
+    def quote_params
+      params.require(:quote).permit(:name)
+    end
 end

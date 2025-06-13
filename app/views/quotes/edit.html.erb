@@ -1,3 +1,4 @@
+<%# app/views/quotes/edit.html.erb %>
 <main class="container">
   <%= link_to sanitize("&larr; Back to quote"), quote_path(@quote) %>
 
@@ -5,5 +6,7 @@
     <h1>Edit quote</h1>
   </div>
 
-  <%= render "form", quote: @quote %>
+  <%= turbo_frame_tag @quote do %> <%# ✨ NUEVO: Envuelve el formulario con un frame del ID de la cita. %>
+    <%= render "form", quote: @quote %>
+  <% end %>
 </main>

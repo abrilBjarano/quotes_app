@@ -1,10 +1,16 @@
-<%= simple_form_for quote, html: { class: "quote form" } do |f| %>
-  <% if quote.errors.any? %>
-    <div class="error-message">
-      <%= quote.errors.full_messages.to_sentence.capitalize %>
-    </div>
-  <% end %>
+<%# app/views/quotes/_form.html.erb %>
+<%# ✨ MODIFICADO: El ID del frame es "new_quote" si la cita es nueva, o el ID de la cita si se está editando. %>
+<turbo-frame id="<%= dom_id(quote, :new) unless quote.persisted? %>">
+  <%= simple_form_for quote, html: { class: "quote form" } do |f| %>
 
-  <%= f.input :name, input_html: { autofocus: true } %>
-  <%= f.submit class: "btn btn--secondary" %>
-<% end %>
+    <% if quote.errors.any? %>
+      <div class="error-message">
+        <%= quote.errors.full_messages.to_sentence.capitalize %>
+      </div>
+    <% end %>
+
+    <%= f.input :name, input_html: { autofocus: true } %>
+    <%= link_to "Cancel", quotes_path, class: "btn btn--light" %> <%# ✨ NUEVO: Botón de cancelar que cierra el form via Turbo Frame. %>
+    <%= f.submit class: "btn btn--secondary" %>
+  <% end %>
+</turbo-frame>

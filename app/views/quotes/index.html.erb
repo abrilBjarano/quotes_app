@@ -1,10 +1,23 @@
 <main class="container">
   <div class="header">
     <h1>Quotes</h1>
-    <%= link_to "New quote",
-                new_quote_path,
-                class: "btn btn--primary" %>
+    <%# ✨ Aquí envolver el link 'New quote' en un turbo-frame con ID 'new_quote'. %>
+    <%#    El link también necesita el data-turbo-frame para apuntar a ESE ID. %>
+    <turbo-frame id="new_quote">
+      <%= link_to "New quote",
+                  new_quote_path,
+                  class: "btn btn--primary",
+                  data: { turbo_frame: dom_id(Quote.new) } %>
+    </turbo-frame>
   </div>
 
-  <%= render @quotes %>
+  <%# ✨ Este es otro turbo-frame que se queda "vacío" inicialmente. %>
+  <%#    Es el que va a recibir el contenido del formulario de 'new_quote' si no está en el header. %>
+  <%#    Se usa para que el formulario pueda ser reemplazado por un link después de crear. %>
+  <%= turbo_frame_tag Quote.new %>
+
+  <%# ✨ Este frame envuelve la lista de citas para que se actualice dinámicamente con Turbo Streams. %>
+  <turbo-frame id="quotes">
+    <%= render @quotes %>
+  </turbo-frame>
 </main>
