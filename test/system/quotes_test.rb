@@ -2,6 +2,12 @@
 require "application_system_test_case"
 
 class QuotesTest < ApplicationSystemTestCase
+
+  setup do
+    login_as users(:accountant)
+    @quote = Quote.ordered.first
+  end
+  
   setup do
     # ✨ MODIFICADO: Aseguramos que la primera cita sea la más reciente para los tests.
     @quote = Quote.ordered.first

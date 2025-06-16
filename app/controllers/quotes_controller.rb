@@ -4,8 +4,7 @@ class QuotesController < ApplicationController
 
   # GET /quotes or /quotes.json
   def index
-    # ✨ MODIFICADO: Usamos el scope para ordenar las citas.
-    @quotes = Quote.ordered
+    @quotes = current_company.quotes.ordered
   end
 
   # GET /quotes/1 or /quotes/1.json
@@ -23,18 +22,15 @@ class QuotesController < ApplicationController
 
   # POST /quotes or /quotes.json
   def create
-    @quote = Quote.new(quote_params)
+    @quote = current_company.quotes.build(quote_params)
 
-    respond_to do |format|
-      if @quote.save
-        format.html { redirect_to quotes_path(@quote), status: :see_other }
-        format.json { render :show, status: :created, location: @quote }
-        format.turbo_stream # ✨ NUEVO: Responde con Turbo Stream para crear en vivo.
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @quote.errors, status: :unprocessable_entity }
-        format.turbo_stream # ✨ NUEVO: Responde con Turbo Stream para errores en vivo.
+    if @quote.save
+      respond_to do |format|
+        format.html { redirect_to quotes_path, notice: "Quote was successfully created." }
+        format.turbo_stream
       end
+    else
+      render :new
     end
   end
 
@@ -72,5 +68,13 @@ class QuotesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def quote_params
       params.require(:quote).permit(:name)
+    end
+
+    private
+    
+    def set_quote
+    # We must use current_company.quotes here instead of Quote
+    # for security reasons
+    @quote = current_company.quotes.find(params[:id])
     end
 end
