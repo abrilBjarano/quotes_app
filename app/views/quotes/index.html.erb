@@ -1,6 +1,6 @@
 <%# app/views/quotes/index.html.erb %>
 
-<%= turbo_stream_from "quotes" %> <%# ✨ ¡NUEVO y CLAVE! Esta línea hace que la página escuche los cambios del canal "quotes". %>
+<%= turbo_stream_from current_company, "quotes" %> <%# ✨ ¡NUEVO y CLAVE! Esta línea hace que la página escuche los cambios del canal "quotes". %>
 
 <main class="container">
   <div class="header">
