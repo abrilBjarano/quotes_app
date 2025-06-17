@@ -20,42 +20,40 @@ class QuotesController < ApplicationController
   def edit
   end
 
-  # POST /quotes or /quotes.json
   def create
     @quote = current_company.quotes.build(quote_params)
 
     if @quote.save
       respond_to do |format|
         format.html { redirect_to quotes_path, notice: "Quote was successfully created." }
-        format.turbo_stream
+        format.turbo_stream { flash.now[:notice] = "Quote was successfully created." }
       end
     else
       render :new
     end
   end
 
-  # PATCH/PUT /quotes/1 or /quotes/1.json
-  def update
-    respond_to do |format|
-      if @quote.update(quote_params)
-        format.html { redirect_to quote_url(@quote), notice: "Quote was successfully updated." }
-        format.json { render :show, status: :ok, location: @quote }
-        # ✨ Opcional: También podrías agregar format.turbo_stream aquí si quisieras un update con stream.
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @quote.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  # All the previous code
 
-  # DELETE /quotes/1 or /quotes/1.json
+  def update
+  if @quote.update(quote_params)
+    respond_to do |format|
+      format.html { redirect_to quotes_path, notice: "Quote was successfully updated." }
+      format.turbo_stream { flash.now[:notice] = "Quote was successfully updated." }
+    end
+  else
+    render :edit, status: :unprocessable_entity
+  end
+end
+
+  # All the previous code
+
   def destroy
     @quote.destroy
 
     respond_to do |format|
-      format.html { redirect_to quotes_url, notice: "Quote was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
-      format.turbo_stream # ✨ NUEVO: Responde con Turbo Stream para eliminar en vivo.
+      format.html { redirect_to quotes_path, notice: "Quote was successfully destroyed." }
+      format.turbo_stream { flash.now[:notice] = "Quote was successfully destroyed." }
     end
   end
 
