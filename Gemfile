@@ -25,6 +25,7 @@ gem "simple_form", "~> 5.1.0"
 gem 'foreman' # Asegúrate que esta línea esté, sin comentar
 
 gem "devise"
+gem "redis"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
