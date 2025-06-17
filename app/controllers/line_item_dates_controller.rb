@@ -1,5 +1,6 @@
 class LineItemDatesController < ApplicationController
   before_action :set_quote
+  before_action :set_line_item_date, only: [:edit, :update, :destroy] # <--- ¡AGREGA ESTA LÍNEA AQUÍ!
 
   def new
     @line_item_date = @quote.line_item_dates.build
@@ -18,8 +19,30 @@ class LineItemDatesController < ApplicationController
     end
   end
 
+  def edit # ESTE ES PÚBLICO
+  end
 
-  private
+  def update # ESTE ES PÚBLICO
+    if @line_item_date.update(line_item_date_params)
+      respond_to do |format|
+        format.html { redirect_to quote_path(@quote), notice: "Date was successfully updated." }
+        format.turbo_stream { flash.now[:notice] = "Date was successfully updated." }
+      end
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy # ESTE ES PÚBLICO
+    @line_item_date.destroy
+
+    respond_to do |format|
+      format.html { redirect_to quote_path(@quote), notice: "Date was successfully destroyed." }
+      format.turbo_stream { flash.now[:notice] = "Date was successfully destroyed." }
+    end
+  end
+
+  private # <--- ¡UN SOLO BLOQUE PRIVATE!
 
   def line_item_date_params
     params.require(:line_item_date).permit(:date)
@@ -29,26 +52,7 @@ class LineItemDatesController < ApplicationController
     @quote = current_company.quotes.find(params[:quote_id])
   end
 
-  def edit
-  end
-
-  def update
-    if @line_item_date.update(line_item_date_params)
-      redirect_to quote_path(@quote), notice: "Date was successfully updated."
-    else
-      render :edit, status: :unprocessable_entity
-    end
-  end
-
-  private
-
-  def set_line_item_date
+  def set_line_item_date # ESTE ES PRIVADO, Y ES LLAMADO POR EL before_action
     @line_item_date = @quote.line_item_dates.find(params[:id])
-  end
-
-  def destroy
-    @line_item_date.destroy
-
-    redirect_to quote_path(@quote), notice: "Date was successfully destroyed."
   end
 end
