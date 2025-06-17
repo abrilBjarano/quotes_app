@@ -21,7 +21,7 @@ gem "stimulus-rails"
 gem "sassc-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
-gem "simple_form", "~> 5.1.0"
+gem "simple_form", "~> 5.3.1"
 gem 'foreman' # Asegúrate que esta línea esté, sin comentar
 
 gem "devise"
