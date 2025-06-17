@@ -1,21 +1,18 @@
-<%# app/views/quotes/index.html.erb %>
+<%= turbo_stream_from current_company, "quotes" %>
 
-<%= turbo_stream_from current_company, "quotes" %> <%# ✨ ¡NUEVO y CLAVE! Esta línea hace que la página escuche los cambios del canal "quotes". %>
-
-<main class="container">
+<div class="container">
   <div class="header">
     <h1>Quotes</h1>
-    <turbo-frame id="new_quote">
-      <%= link_to "New quote",
-                  new_quote_path,
-                  class: "btn btn--primary",
-                  data: { turbo_frame: dom_id(Quote.new) } %>
-    </turbo-frame>
+    <%= link_to "New quote",
+                new_quote_path,
+                class: "btn btn--primary",
+                data: { turbo_frame: dom_id(Quote.new) } %>
   </div>
 
   <%= turbo_frame_tag Quote.new %>
 
-  <turbo-frame id="quotes">
+  <%= turbo_frame_tag "quotes" do %>
+    <%= render "quotes/empty_state" %>
     <%= render @quotes %>
-  </turbo-frame>
-</main>
+  <% end %>
+</div>
