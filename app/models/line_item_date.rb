@@ -1,5 +1,7 @@
+# app/models/line_item_date.rb
 class LineItemDate < ApplicationRecord
-  belongs_to :quote
+  belongs_to :quote # Una LineItemDate pertenece a una Quote
+  has_many :line_items, dependent: :destroy # ✨ ¡ESTA ES LA LÍNEA CLAVE QUE DEBE IR AQUÍ!
 
   validates :date, presence: true, uniqueness: { scope: :quote_id }
 
